@@ -1,31 +1,9 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 
-/// Thown when an exception is thrown while making an http request.
-class HttpFailure implements Exception {
-  const HttpFailure([this.message]);
-
-  final String? message;
-
-  @override
-  String toString() => 'HttpFailure: $message';
-}
-
-/// Thrown when a http operation fails
-class HttpRequestFailure implements Exception {
-  const HttpRequestFailure({required this.statusCode, this.message});
-
-  final int statusCode;
-  final String? message;
-  @override
-  String toString() => 'HttpRequestFailure($statusCode, $message)';
-}
-
-/// Thrown when the reponse body cannot be stored in a [Map]
-class JSONDecodeException implements Exception {}
-
-/// Thrown when the http response body does not contain the expected data
-class ExpectedResultFailure implements Exception {}
+import './pindo_errors.dart';
 
 /// A Dart API client for pindo.io. Check www.pindo.io for more info.
 class PindoClient {
@@ -41,30 +19,39 @@ class PindoClient {
     required String username,
     required String password,
   }) async {
-    final uri = Uri.https(authority, '/users/token')
-      ..replace(queryParameters: {'username': username, 'password': password});
-    Response res;
+    final uri = Uri.https(authority, '/users/token');
+    final auth = 'Basic ${base64Encode(utf8.encode("$username:$password"))}';
+    _dio.options.headers['authorization'] = auth;
+    Response<Map<String, dynamic>> res;
     Map data;
+
     try {
       res = await _dio.getUri(uri);
       data = res.data as Map<String, dynamic>;
+    } on DioError catch (e) {
+      if (e.response != null) {
+        final errorRes = (e.response!.data as Map);
+        throw PindoError(errorRes['message'], errorRes['status']);
+      }
+      throw PindoHttpError(
+        type: e.type.valueToString,
+        requestOptions: e.requestOptions,
+        error: e.error,
+        response: e.error,
+        stackTrace: e.stackTrace,
+      );
     } on TypeError {
-      throw JSONDecodeException();
+      throw PindoResponseFormatError();
     } on Exception {
-      throw const HttpFailure();
+      // If the exception is none of the two above, just rethrow it
+      rethrow;
     }
 
-    if (data.containsKey('error')) {
-      throw HttpRequestFailure(
-        statusCode: data['status'],
-        message: data['message'],
-      );
-    }
     if (data.containsKey('token')) {
       return data['token'];
     }
 
-    throw ExpectedResultFailure();
+    throw PindoUnexpectedResponseError(expected: 'token', received: data);
   }
 
   /// Refresh the user's token
@@ -73,34 +60,43 @@ class PindoClient {
     required String username,
     required String password,
   }) async {
-    final uri = Uri.https(authority, '/users/refresh/token')
-      ..replace(queryParameters: {'username': username, 'password': password});
-
-    Response res;
+    final uri = Uri.https(authority, '/users/refresh/token');
+    final auth = 'Basic ${base64Encode(utf8.encode("$username:$password"))}';
+    _dio.options.headers['authorization'] = auth;
+    Response<Map<String, dynamic>> res;
     Map data;
+
     try {
       res = await _dio.getUri(uri);
       data = res.data as Map<String, dynamic>;
-    } on TypeError {
-      throw JSONDecodeException();
-    } on Exception catch (e) {
-      throw HttpFailure(e.toString());
-    }
-    if (data.containsKey('error')) {
-      throw HttpRequestFailure(
-        statusCode: data['status'],
-        message: data['message'],
+    } on DioError catch (e) {
+      if (e.response != null) {
+        final errorRes = (e.response!.data as Map);
+        throw PindoError(errorRes['message'], errorRes['status']);
+      }
+      throw PindoHttpError(
+        type: e.type.valueToString,
+        requestOptions: e.requestOptions,
+        error: e.error,
+        response: e.error,
+        stackTrace: e.stackTrace,
       );
+    } on TypeError {
+      throw PindoResponseFormatError();
+    } on Exception {
+      // If the exception is none of the two above, just rethrow it
+      rethrow;
     }
+
     if (data.containsKey('token')) {
       return data['token'];
     }
-    throw ExpectedResultFailure();
+    throw PindoUnexpectedResponseError(expected: 'token', received: data);
   }
 
   /// Create a new Pindo account
   /// Returns the url to the user's profile
-  Future<String> register({
+  Future<void> register({
     required String username,
     required String email,
     required String password,
@@ -112,28 +108,26 @@ class PindoClient {
       'password': password
     };
 
-    Response res;
-    var data = {};
     try {
-      res = await _dio.postUri(uri, data: payload);
-      data = res.data as Map<String, dynamic>;
-    } on TypeError {
-      throw JSONDecodeException();
-    } on Exception catch (e) {
-      throw HttpFailure(e.toString());
-    }
-
-    if (data.containsKey('error')) {
-      throw HttpRequestFailure(
-        message: data['message'],
-        statusCode: data['status'],
+      await _dio.postUri(uri, data: payload);
+    } on DioError catch (e) {
+      if (e.response != null) {
+        final errorRes = (e.response!.data as Map);
+        throw PindoError(errorRes['message'], errorRes['status']);
+      }
+      throw PindoHttpError(
+        type: e.type.valueToString,
+        requestOptions: e.requestOptions,
+        error: e.error,
+        response: e.response,
+        stackTrace: e.stackTrace,
       );
+    } on TypeError {
+      throw PindoResponseFormatError();
+    } on Exception {
+      // If the exception is none of the two above, just rethrow it
+      rethrow;
     }
-
-    if (data.containsKey('self_url')) {
-      return data['self_url'];
-    }
-    throw ExpectedResultFailure();
   }
 
   /// Check your balance
@@ -141,31 +135,39 @@ class PindoClient {
     final uri = Uri.https(authority, '/wallets/self');
     _dio.options.headers = {'Authorization': 'Bearer $token'};
 
-    Response res;
-    Map data;
+    Response<Map<String, dynamic>> res;
+    var data = {};
     try {
       res = await _dio.getUri(uri);
-      data = res.data;
+      data = res.data as Map<String, dynamic>;
+    } on DioError catch (e) {
+      if (e.response != null) {
+        final errorRes = (e.response!.data as Map);
+        throw PindoError(errorRes['message'], errorRes['status']);
+      }
+      throw PindoHttpError(
+        type: e.type.valueToString,
+        requestOptions: e.requestOptions,
+        error: e.error,
+        response: e.error,
+        stackTrace: e.stackTrace,
+      );
     } on TypeError {
-      throw JSONDecodeException();
-    } on Exception catch (e) {
-      throw HttpFailure(e.toString());
+      throw PindoResponseFormatError();
+    } on Exception {
+      // If the exception is none of the two above, just rethrow it
+      rethrow;
     }
 
-    if (data.containsKey('error')) {
-      throw HttpRequestFailure(
-        statusCode: data['status'],
-        message: data['message'],
-      );
-    }
     if (data.containsKey('amount')) {
       return data['amount'];
     }
-    throw ExpectedResultFailure();
+    throw PindoUnexpectedResponseError(expected: 'amount', received: data);
   }
 
   /// Send an SMS to a single user
-  Future<String> sendSMS({
+  /// retutns the remaining balance after the sms is sent
+  Future<double> sendSMS({
     required String token,
     required String to,
     required String from,
@@ -174,32 +176,40 @@ class PindoClient {
     final uri = Uri.https(authority, '/v1/sms/');
     final payload = {'to': to, 'text': text, 'sender': from};
     _dio.options.headers = {'Authorization': 'Bearer $token'};
-    Response res;
+    Response<Map<String, dynamic>> res;
     Map data;
+
     try {
       res = await _dio.postUri(uri, data: payload);
       data = res.data as Map<String, dynamic>;
-    } on TypeError {
-      throw JSONDecodeException();
-    } on Exception catch (e) {
-      throw HttpFailure(e.toString());
+    } on DioError catch (e) {
+      if (e.response != null) {
+        final errorRes = (e.response!.data as Map);
+        throw PindoError(errorRes['message'], errorRes['status']);
+      }
+      throw PindoHttpError(
+        type: e.type.valueToString,
+        requestOptions: e.requestOptions,
+        error: e.error,
+        response: e.response,
+        stackTrace: e.stackTrace,
+      );
+    } on Exception {
+      rethrow;
     }
 
-    if (data.containsKey('error')) {
-      throw HttpRequestFailure(
-        statusCode: (res.data as Map)['status'],
-        message: (res.data as Map)['message'],
-      );
+    if (data.containsKey('remaining_balance')) {
+      return data['remaining_balance'];
     }
-    if (data.containsKey('status') && data['status'] == 'sent') {
-      return data['status'];
-    }
-    throw ExpectedResultFailure();
+    throw PindoUnexpectedResponseError(
+      expected: 'remaining_balance',
+      received: data,
+    );
   }
 
   /// Setup an organization.
   /// Returns the url to the organization
-  Future<Map<String, dynamic>> organization({
+  Future<String> organization({
     required String token,
     required String name,
     required String webHookURL,
@@ -211,6 +221,7 @@ class PindoClient {
       'webhook_url': webHookURL,
       'sms_retries': retriesCount
     };
+
     _dio.options.headers = {'Authorization': 'Bearer $token'};
     Response<Map<String, dynamic>> res;
     var data = {};
@@ -218,22 +229,33 @@ class PindoClient {
     try {
       res = await _dio.putUri(uri, data: payload);
       data = res.data!;
-    } on TypeError {
-      throw JSONDecodeException();
-    } on Exception catch (e) {
-      throw HttpFailure(e.toString());
-    }
-
-    if (data.containsKey('error')) {
-      throw HttpRequestFailure(
-        statusCode: data['status'],
-        message: data['message'],
+    } on DioError catch (e) {
+      if (e.response != null) {
+        final errorRes = (e.response!.data as Map);
+        throw PindoError(errorRes['message'], errorRes['status']);
+      }
+      throw PindoHttpError(
+        type: e.type.valueToString,
+        requestOptions: e.requestOptions,
+        error: e.error,
+        response: e.response,
+        stackTrace: e.stackTrace,
       );
+    } on Exception {
+      rethrow;
     }
 
     if (data.containsKey('self_url')) {
-      return data as Map<String, dynamic>;
+      return data['self_url'];
     }
-    throw ExpectedResultFailure();
+    throw PindoUnexpectedResponseError(expected: 'self_url', received: data);
   }
+}
+
+/// An extension to add additional operations to [DioErrorType];
+/// check https://github.com/flutterchina/dio/blob/master/dio/lib/src/dio_error.dart
+/// to see all the values of [DioErrorType].
+extension DioErrorTypeExtension on DioErrorType {
+  /// Gets the value in a string format without the `DioErrorType` prefix.
+  String get valueToString => toString().substring(13);
 }

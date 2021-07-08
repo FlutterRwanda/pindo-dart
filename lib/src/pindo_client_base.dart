@@ -22,26 +22,21 @@ class PindoClient {
     final uri = Uri.https(authority, '/users/token');
     final auth = 'Basic ${base64Encode(utf8.encode("$username:$password"))}';
     _dio.options.headers['authorization'] = auth;
-    Response<Map<String, dynamic>> res;
+    late Response<Map<String, dynamic>> res;
     Map data;
 
     try {
       res = await _dio.getUri(uri);
       data = res.data as Map<String, dynamic>;
-    } on DioError catch (e) {
-      if (e.response != null) {
-        final errorRes = (e.response!.data as Map);
-        throw PindoError(errorRes['message'], errorRes['status']);
-      }
-      throw PindoHttpError(
+    } on DioError catch (e, s) {
+      throw PindoError(
+        message: (e.response?.data as Map)['message'],
+        statusCode: (e.response?.data as Map)['status'] ?? res.statusCode,
         type: e.type.valueToString,
-        requestOptions: e.requestOptions,
-        error: e.error,
-        response: e.error,
-        stackTrace: e.stackTrace,
+        stackTrace: s,
       );
     } on TypeError {
-      throw PindoResponseFormatError();
+      throw PindoCastingError();
     } on Exception {
       // If the exception is none of the two above, just rethrow it
       rethrow;
@@ -63,26 +58,21 @@ class PindoClient {
     final uri = Uri.https(authority, '/users/refresh/token');
     final auth = 'Basic ${base64Encode(utf8.encode("$username:$password"))}';
     _dio.options.headers['authorization'] = auth;
-    Response<Map<String, dynamic>> res;
+    late Response<Map<String, dynamic>> res;
     Map data;
 
     try {
       res = await _dio.getUri(uri);
       data = res.data as Map<String, dynamic>;
-    } on DioError catch (e) {
-      if (e.response != null) {
-        final errorRes = (e.response!.data as Map);
-        throw PindoError(errorRes['message'], errorRes['status']);
-      }
-      throw PindoHttpError(
+    } on DioError catch (e, s) {
+      throw PindoError(
+        message: (e.response?.data as Map)['message'],
+        statusCode: (e.response?.data as Map)['status'] ?? res.statusCode,
         type: e.type.valueToString,
-        requestOptions: e.requestOptions,
-        error: e.error,
-        response: e.error,
-        stackTrace: e.stackTrace,
+        stackTrace: s,
       );
     } on TypeError {
-      throw PindoResponseFormatError();
+      throw PindoCastingError();
     } on Exception {
       // If the exception is none of the two above, just rethrow it
       rethrow;
@@ -107,23 +97,18 @@ class PindoClient {
       'email': email,
       'password': password
     };
-
+    late Response<Map<String, dynamic>> res;
     try {
-      await _dio.postUri(uri, data: payload);
-    } on DioError catch (e) {
-      if (e.response != null) {
-        final errorRes = (e.response!.data as Map);
-        throw PindoError(errorRes['message'], errorRes['status']);
-      }
-      throw PindoHttpError(
+      res = await _dio.postUri(uri, data: payload);
+    } on DioError catch (e, s) {
+      throw PindoError(
+        message: (e.response?.data as Map)['message'],
+        statusCode: (e.response?.data as Map)['status'] ?? res.statusCode,
         type: e.type.valueToString,
-        requestOptions: e.requestOptions,
-        error: e.error,
-        response: e.response,
-        stackTrace: e.stackTrace,
+        stackTrace: s,
       );
     } on TypeError {
-      throw PindoResponseFormatError();
+      throw PindoCastingError();
     } on Exception {
       // If the exception is none of the two above, just rethrow it
       rethrow;
@@ -135,25 +120,20 @@ class PindoClient {
     final uri = Uri.https(authority, '/wallets/self');
     _dio.options.headers = {'Authorization': 'Bearer $token'};
 
-    Response<Map<String, dynamic>> res;
+    late Response<Map<String, dynamic>> res;
     var data = {};
     try {
       res = await _dio.getUri(uri);
       data = res.data as Map<String, dynamic>;
-    } on DioError catch (e) {
-      if (e.response != null) {
-        final errorRes = (e.response!.data as Map);
-        throw PindoError(errorRes['message'], errorRes['status']);
-      }
-      throw PindoHttpError(
+    } on DioError catch (e, s) {
+      throw PindoError(
+        message: (e.response?.data as Map)['message'],
+        statusCode: (e.response?.data as Map)['status'] ?? res.statusCode,
         type: e.type.valueToString,
-        requestOptions: e.requestOptions,
-        error: e.error,
-        response: e.error,
-        stackTrace: e.stackTrace,
+        stackTrace: s,
       );
     } on TypeError {
-      throw PindoResponseFormatError();
+      throw PindoCastingError();
     } on Exception {
       // If the exception is none of the two above, just rethrow it
       rethrow;
@@ -176,24 +156,21 @@ class PindoClient {
     final uri = Uri.https(authority, '/v1/sms/');
     final payload = {'to': to, 'text': text, 'sender': from};
     _dio.options.headers = {'Authorization': 'Bearer $token'};
-    Response<Map<String, dynamic>> res;
+    late Response<Map<String, dynamic>> res;
     Map data;
 
     try {
       res = await _dio.postUri(uri, data: payload);
       data = res.data as Map<String, dynamic>;
-    } on DioError catch (e) {
-      if (e.response != null) {
-        final errorRes = (e.response!.data as Map);
-        throw PindoError(errorRes['message'], errorRes['status']);
-      }
-      throw PindoHttpError(
+    } on DioError catch (e, s) {
+      throw PindoError(
+        message: (e.response?.data as Map)['message'],
+        statusCode: (e.response?.data as Map)['status'] ?? res.statusCode,
         type: e.type.valueToString,
-        requestOptions: e.requestOptions,
-        error: e.error,
-        response: e.response,
-        stackTrace: e.stackTrace,
+        stackTrace: s,
       );
+    } on TypeError {
+      throw PindoCastingError();
     } on Exception {
       rethrow;
     }
@@ -223,24 +200,21 @@ class PindoClient {
     };
 
     _dio.options.headers = {'Authorization': 'Bearer $token'};
-    Response<Map<String, dynamic>> res;
+    late Response<Map<String, dynamic>> res;
     var data = {};
 
     try {
       res = await _dio.putUri(uri, data: payload);
       data = res.data!;
-    } on DioError catch (e) {
-      if (e.response != null) {
-        final errorRes = (e.response!.data as Map);
-        throw PindoError(errorRes['message'], errorRes['status']);
-      }
-      throw PindoHttpError(
+    } on DioError catch (e, s) {
+      throw PindoError(
+        message: (e.response?.data as Map)['message'],
+        statusCode: (e.response?.data as Map)['status'] ?? res.statusCode,
         type: e.type.valueToString,
-        requestOptions: e.requestOptions,
-        error: e.error,
-        response: e.response,
-        stackTrace: e.stackTrace,
+        stackTrace: s,
       );
+    } on TypeError {
+      throw PindoCastingError();
     } on Exception {
       rethrow;
     }
@@ -256,6 +230,6 @@ class PindoClient {
 /// check https://github.com/flutterchina/dio/blob/master/dio/lib/src/dio_error.dart
 /// to see all the values of [DioErrorType].
 extension DioErrorTypeExtension on DioErrorType {
-  /// Gets the value in a string format without the `DioErrorType` prefix.
+  /// Gets the value [DioErrorType] in a string format without the prefix.
   String get valueToString => toString().substring(13);
 }

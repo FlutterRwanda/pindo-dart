@@ -1,41 +1,28 @@
 import 'package:dio/dio.dart';
 
-/// Thown when an exception is thrown while making an http request.
-/// A wrapper over the [DioError] class
-/// Mostly used when [response] does not hold any data
-class PindoHttpError implements Exception {
-  const PindoHttpError({
-    required this.requestOptions,
-    this.response,
-    this.error,
-    this.type,
-    this.stackTrace,
-  });
-
-  final Response? response;
-  final String? type;
-  final RequestOptions requestOptions;
-  final StackTrace? stackTrace;
-  final dynamic error;
-
-  @override
-  String toString() => 'PindoHttpError($type, ${error.toString()})';
-}
-
-/// Like PindoHttpError but only contains the message and the status code.
-/// Used when the response contains some data.
+/// Thrown when the http request goes wrong; contains the
+/// message and the status code. Wraps [DioError]
 class PindoError implements Exception {
-  const PindoError([this.message, this.statusCode]);
+  const PindoError({this.message, this.statusCode, this.type, this.stackTrace});
 
+  /// Exception's stacktrcae
+  final StackTrace? stackTrace;
+
+  /// Http response's body message
   final String? message;
+
+  /// Http response's status code
   final int? statusCode;
 
+  /// Value of the exception's [DioErrorType]
+  final String? type;
+
   @override
-  String toString() => 'PindoError($message)';
+  String toString() => 'PindoError $type: $message';
 }
 
-/// Thrown when the response body cannot be hold in a [Map]
-class PindoResponseFormatError implements Exception {}
+/// Thrown when the response body cannot be cast as a [Map]
+class PindoCastingError implements Exception {}
 
 /// Thrown when the http response body does not contain what it should.
 /// Mostly happens when the endpoint for the expected data has been changed
@@ -45,10 +32,11 @@ class PindoUnexpectedResponseError implements Exception {
     this.received,
   });
 
-  final String expected;
-  final dynamic received;
+  final Object expected;
+  final Object? received;
 
   @override
-  String toString() =>
-      'UnexpectedResponseError($expected, ${received.toString()})';
+  String toString() {
+    return 'PindoUnexpectedResponseError($expected, ${received.toString()})';
+  }
 }

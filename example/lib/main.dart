@@ -24,7 +24,7 @@ class App extends StatelessWidget {
           ),
         ),
       ),
-      home: AppView(),
+      home: const AppView(),
     );
   }
 }
@@ -35,7 +35,7 @@ class AppView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Pindo Client Example')),
+      appBar: AppBar(title: const Text('Pindo Client Example')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -44,26 +44,26 @@ class AppView extends StatelessWidget {
           children: [
             TextButton(
               onPressed: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => BalancePage())),
-              child: Text('Balance'),
+                  .push(MaterialPageRoute(builder: (_) => const BalancePage())),
+              child: const Text('Balance'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
+            TextButton(
+              onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const RegisterPage())),
+              child: const Text('Register'),
+            ),
+            const SizedBox(height: 20),
             TextButton(
               onPressed: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => RegisterPage())),
-              child: Text('Register'),
+                  .push(MaterialPageRoute(builder: (_) => const TokenPage())),
+              child: const Text('Token'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             TextButton(
               onPressed: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => TokenPage())),
-              child: Text('Token'),
-            ),
-            SizedBox(height: 20),
-            TextButton(
-              onPressed: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => SMSPage())),
-              child: Text('SMS'),
+                  .push(MaterialPageRoute(builder: (_) => const SMSPage())),
+              child: const Text('SMS'),
             ),
           ],
         ),

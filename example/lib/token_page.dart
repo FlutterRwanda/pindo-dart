@@ -37,7 +37,7 @@ class _TokenPageState extends State<TokenPage> {
             children: [
               TextFormField(
                 controller: _usernameController,
-                decoration: InputDecoration(labelText: 'Username'),
+                decoration: const InputDecoration(labelText: 'Username'),
                 validator: (input) {
                   if (input == null || input.isEmpty) {
                     return 'Username cannot be empty';
@@ -45,7 +45,7 @@ class _TokenPageState extends State<TokenPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
                 obscureText: !_isPasswordVisible,
                 controller: _passwordController,
@@ -53,8 +53,8 @@ class _TokenPageState extends State<TokenPage> {
                   labelText: 'Password',
                   suffix: IconButton(
                     icon: _isPasswordVisible
-                        ? Icon(Icons.remove_red_eye_rounded)
-                        : Icon(
+                        ? const Icon(Icons.remove_red_eye_rounded)
+                        : const Icon(
                             Icons.remove_red_eye_outlined,
                             color: Colors.blue,
                           ),
@@ -72,9 +72,8 @@ class _TokenPageState extends State<TokenPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextButton(
-                child: Text('Get Token'),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     await _pindo
@@ -95,7 +94,7 @@ class _TokenPageState extends State<TokenPage> {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                title: Text(
+                                title: const Text(
                                   'Failed',
                                   style: TextStyle(color: Colors.red),
                                 ),
@@ -106,10 +105,10 @@ class _TokenPageState extends State<TokenPage> {
                     );
                   }
                 },
+                child: const Text('Get Token'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextButton(
-                child: Text('Refresh Token'),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     final username = _usernameController.text;
@@ -128,7 +127,7 @@ class _TokenPageState extends State<TokenPage> {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                title: Text(
+                                title: const Text(
                                   'Failed',
                                   style: TextStyle(color: Colors.red),
                                 ),
@@ -139,13 +138,14 @@ class _TokenPageState extends State<TokenPage> {
                     );
                   }
                 },
+                child: const Text('Refresh Token'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextField(
                 maxLines: 5,
                 controller: _tokenController,
                 readOnly: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Your Pindo Token',
                   border: OutlineInputBorder(),
                 ),

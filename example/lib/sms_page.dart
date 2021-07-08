@@ -40,24 +40,25 @@ class _SMSPageState extends State<SMSPage> {
               TextFormField(
                 controller: _recipientNumber,
                 keyboardType: TextInputType.phone,
-                decoration: InputDecoration(labelText: 'Sending to'),
+                decoration: const InputDecoration(labelText: 'Sending to'),
                 validator: (input) {
                   if (input == null || input.isEmpty) {
                     return 'This field cannot be empty';
                   }
                   if (!RegExp(r'^\+250.*$').hasMatch(input)) {
-                    return 'Please enter a Rwandan phone number\n(Starts with +250)';
+                    return 'Please enter a Rwandan phone number\n'
+                        '(Starts with +250)';
                   }
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
                 autocorrect: true,
                 keyboardType: TextInputType.text,
                 controller: _text,
                 maxLines: 7,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Message',
                   border: OutlineInputBorder(),
                 ),
@@ -68,11 +69,11 @@ class _SMSPageState extends State<SMSPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _author,
                 keyboardType: TextInputType.name,
-                decoration: InputDecoration(labelText: 'Sender Name'),
+                decoration: const InputDecoration(labelText: 'Sender Name'),
                 validator: (input) {
                   if (input == null || input.isEmpty) {
                     return 'This field cannot be empty';
@@ -80,10 +81,10 @@ class _SMSPageState extends State<SMSPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextFormField(
                 controller: _token,
-                decoration: InputDecoration(labelText: 'Token'),
+                decoration: const InputDecoration(labelText: 'Token'),
                 validator: (input) {
                   if (input == null || input.isEmpty) {
                     return 'This field cannot be empty';
@@ -91,9 +92,8 @@ class _SMSPageState extends State<SMSPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextButton(
-                child: const Text('Send SMS'),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     await _pindo
@@ -108,7 +108,7 @@ class _SMSPageState extends State<SMSPage> {
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
-                                  title: Text('Message sent!'),
+                                  title: const Text('Message sent!'),
                                   content: Text(
                                     'Remaining balance: $balance',
                                     style: Theme.of(context)
@@ -127,7 +127,7 @@ class _SMSPageState extends State<SMSPage> {
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
-                                        title: Text(
+                                        title: const Text(
                                           'SMS Not Sent',
                                           style: TextStyle(color: Colors.red),
                                         ),
@@ -139,6 +139,7 @@ class _SMSPageState extends State<SMSPage> {
                         );
                   }
                 },
+                child: const Text('Send SMS'),
               ),
             ],
           ),

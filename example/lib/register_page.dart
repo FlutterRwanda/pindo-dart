@@ -27,7 +27,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Register')),
+      appBar: AppBar(title: const Text('Register')),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -38,7 +38,7 @@ class _RegisterPageState extends State<RegisterPage> {
             children: [
               TextFormField(
                 controller: _usernameController,
-                decoration: InputDecoration(labelText: 'Username'),
+                decoration: const InputDecoration(labelText: 'Username'),
                 validator: (input) {
                   if (input == null || input.isEmpty) {
                     return 'Username cannot be empty';
@@ -46,11 +46,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(labelText: 'Email'),
+                decoration: const InputDecoration(labelText: 'Email'),
                 validator: (input) {
                   if (input == null || input.isEmpty) {
                     return 'Email cannot be empty';
@@ -58,7 +58,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
                 obscureText: !_isPasswordVisible,
                 controller: _passwordController,
@@ -66,8 +66,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   labelText: 'Password',
                   suffix: IconButton(
                     icon: _isPasswordVisible
-                        ? Icon(Icons.remove_red_eye_rounded)
-                        : Icon(
+                        ? const Icon(Icons.remove_red_eye_rounded)
+                        : const Icon(
                             Icons.remove_red_eye_outlined,
                             color: Colors.blue,
                           ),
@@ -77,9 +77,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextButton(
-                child: const Text('Register'),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     await _pindo
@@ -92,7 +91,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                title: Text('Check your emails'),
+                                title: const Text('Check your emails'),
                                 content: Text(
                                   'Account Created!',
                                   style: Theme.of(context)
@@ -111,7 +110,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                title: Text(
+                                title: const Text(
                                   'Failed',
                                   style: TextStyle(color: Colors.red),
                                 ),
@@ -122,6 +121,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     );
                   }
                 },
+                child: const Text('Register'),
               ),
             ],
           ),

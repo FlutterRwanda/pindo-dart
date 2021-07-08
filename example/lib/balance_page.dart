@@ -29,11 +29,10 @@ class _BalancePageState extends State<BalancePage> {
           children: [
             TextField(
               controller: _controller,
-              decoration: InputDecoration(labelText: 'Token'),
+              decoration: const InputDecoration(labelText: 'Token'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             TextButton(
-              child: const Text('Get Balance'),
               onPressed: () async {
                 await _pindo
                     .balance(token: _controller.text.trim())
@@ -41,7 +40,7 @@ class _BalancePageState extends State<BalancePage> {
                         context: context,
                         builder: (context) {
                           return AlertDialog(
-                            title: Text('Your balance is'),
+                            title: const Text('Your balance is'),
                             content: Text(
                               value.toString(),
                               style: Theme.of(context)
@@ -60,7 +59,7 @@ class _BalancePageState extends State<BalancePage> {
                         context: context,
                         builder: (context) {
                           return AlertDialog(
-                            title: Text(
+                            title: const Text(
                               'Failed',
                               style: TextStyle(color: Colors.red),
                             ),
@@ -70,6 +69,7 @@ class _BalancePageState extends State<BalancePage> {
                   },
                 );
               },
+              child: const Text('Get Balance'),
             ),
           ],
         ),

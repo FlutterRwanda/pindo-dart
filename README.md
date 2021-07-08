@@ -90,7 +90,7 @@ Future<void> main() async{
 
 ### SMS
 
-To send an SMS, use the function`sendSMS` that takes the parameters: token(sender's token), to(the receiver's phone number), from(the sender's name), and text(the sms body) all of them as strings. This function returns the user's remaining balance after they have sent the SMS.
+To send an SMS, use the function`sendSMS` that takes the parameters: token(sender's token), to(the receiver's phone number), from(the sender's name), and text(the sms body) all of them as strings. This function returns the user's remaining balance after they have sent the SMS.<br/>
 **Note: Only works with Rwandan 🇷🇼 phone numbers**
 
 ```

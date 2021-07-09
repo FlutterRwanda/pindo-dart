@@ -1,13 +1,20 @@
-#!/bin/sh
+#!/bin/bash
 FLUTTER_BRANCH=`grep channel: .metadata | sed 's/  channel: //g'`
-FLUTTER_REVISION=`grep revision: .metadata | sed 's/  revision: //g'`
 
+# Get flutter
 git clone https://github.com/flutter/flutter.git
-cd flutter
-git checkout $FLUTTER_BRANCH
-git pull origin $FLUTTER_BRANCH
-git checkout $FLUTTER_REVISION
-cd ..
+FLUTTER=flutter/bin/flutter
 
-flutter/bin/flutter config --enable-web
-cd example && flutter/bin/flutter build web
+cmd="${FLUTTER} channel ${FLUTTER_BRANCH}"
+
+DIR=$($cmd >& /dev/stdout)
+echo "<!-- $DIR -->"
+$FLUTTER config --enable-web
+if [[ $DIR == *"Your branch is behind"* ]]; then
+  echo "Update starting"
+  $FLUTTER upgrade
+  echo "Update finished"
+fi
+
+cd example/
+$FLUTTER build web --release

@@ -1,10 +1,6 @@
 name: Pindo Client
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [pull_request, push]
 
 jobs:
   build:
@@ -12,13 +8,22 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
+      - uses: subosito/flutter-action@v1.5.0
 
-      - name: Install dependencies
-        run: dart pub get
-        
-      - name: Verify formatting
-        run: dart format --output=none --set-exit-if-changed .
-        
+      - name: Install Dependencies
+        run: flutter packages get
+
+      - name: Format
+        run: flutter format --set-exit-if-changed lib test
+
+      - name: Analyze
+        run: flutter analyze lib test
+
       - name: Run tests
-        run: dart test
+        run: flutter test --no-pub --coverage --test-randomize-ordering-seed random
+
+      - name: Check Code Coverage
+        uses: codecov/codecov-action@v1.0.2
+        with:
+          token: ${{secrets.CODECOV}}
+          file: ./coverage/lcov.info

@@ -66,8 +66,6 @@ class _TokenPageState extends State<TokenPage> {
                 validator: (input) {
                   if (input == null || input.isEmpty) {
                     return 'Password cannot be empty';
-                  } else if (input.length < 6) {
-                    return 'Password must be longer than 5 characters';
                   }
                   return null;
                 },

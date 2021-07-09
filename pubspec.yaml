@@ -1,6 +1,6 @@
 name: pindo_client
-description: A Dart wrapper for the Pindo API.
-version: 1.0.0
+description: A wrapper for the Pindo API written in Dart for Dart.
+version: 1.0.1
 homepage: https://github.com/silverhairs/pindo_client
 environment:
   sdk: ">=2.12.0 <3.0.0"

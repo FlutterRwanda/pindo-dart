@@ -1,4 +1,5 @@
 #!/bin/bash
+cd "example"
 FLUTTER_BRANCH=`grep channel: .metadata | sed 's/  channel: //g'`
 
 # Get flutter
@@ -16,5 +17,4 @@ if [[ $DIR == *"Your branch is behind"* ]]; then
   echo "Update finished"
 fi
 
-cd example/
 $FLUTTER build web --release

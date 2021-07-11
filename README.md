@@ -17,7 +17,7 @@ Add the dependency
 
 ```
 dependendies:
-  pindo_client: ^1.0.0
+  pindo_client: ^1.0.1
 ```
 
 ## Usage

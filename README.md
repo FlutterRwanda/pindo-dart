@@ -9,6 +9,8 @@ This is a **non-official** wrapper for the [Pindo](pindo.io) API written in Dart
 
 Click [here](https://www.pindo.io) to learn more about Pindo.
 
+To see the example app, open https://pindo-client.netlify.app
+
 ## Getting Started
 
 ---

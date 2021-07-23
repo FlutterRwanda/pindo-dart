@@ -45,10 +45,6 @@ class _SMSPageState extends State<SMSPage> {
                   if (input == null || input.isEmpty) {
                     return 'This field cannot be empty';
                   }
-                  if (!RegExp(r'^\+250.*$').hasMatch(input)) {
-                    return 'Please enter a Rwandan phone number\n'
-                        '(Starts with +250)';
-                  }
                   return null;
                 },
               ),

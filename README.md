@@ -1,5 +1,6 @@
 # Pindo Client
 
+![Pindo Client](https://github.com/silverhairs/pindo_client/actions/workflows/main.yml/badge.svg)
 [![codecov](https://codecov.io/gh/silverhairs/pindo_client/branch/main/graph/badge.svg)](https://codecov.io/gh/silverhairs/pindo_client)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)

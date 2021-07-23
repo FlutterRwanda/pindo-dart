@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pindo_client/pindo_client.dart';
+import 'package:pindo/pindo.dart';
 
 class TokenPage extends StatefulWidget {
   const TokenPage({Key? key}) : super(key: key);
@@ -14,7 +14,7 @@ class _TokenPageState extends State<TokenPage> {
   late TextEditingController _tokenController;
   bool _isPasswordVisible = false;
   final _formKey = GlobalKey<FormState>();
-  final _pindo = PindoClient();
+  final _pindo = Pindo();
 
   @override
   void initState() {

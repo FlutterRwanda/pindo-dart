@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pindo_client/pindo_client.dart';
+import 'package:pindo/pindo.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);
@@ -11,7 +11,7 @@ class ForgotPasswordPage extends StatefulWidget {
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   late TextEditingController _emailController;
   final _formKey = GlobalKey<FormState>();
-  final _pindo = PindoClient();
+  final _pindo = Pindo();
 
   @override
   void initState() {

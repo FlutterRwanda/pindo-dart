@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 
-import './pindo_errors.dart';
+import './errors.dart';
 
 /// A Dart API client for pindo.io. Check www.pindo.io for more info.
-class PindoClient {
-  PindoClient({Dio? dio}) : _dio = dio ?? Dio();
+class Pindo {
+  Pindo({Dio? dio}) : _dio = dio ?? Dio();
 
   final Dio _dio;
 

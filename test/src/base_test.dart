@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:pindo_client/pindo_client.dart';
-import 'package:pindo_client/src/pindo_client_base.dart';
+import 'package:pindo/pindo.dart';
 import 'package:test/test.dart';
 
 class MockDio extends Mock implements Dio {
@@ -13,12 +12,12 @@ class MockDio extends Mock implements Dio {
 
 void main() {
   late Dio dio;
-  late PindoClient subject;
+  late Pindo subject;
 
   group('PindoClient', () {
     setUp(() {
       dio = MockDio();
-      subject = PindoClient(dio: dio);
+      subject = Pindo(dio: dio);
     });
 
     setUpAll(() {
@@ -26,7 +25,7 @@ void main() {
     });
 
     test('returns constructor normally', () {
-      expect(() => PindoClient(), returnsNormally);
+      expect(() => Pindo(), returnsNormally);
     });
 
 // PindoClient -> getToken
@@ -35,10 +34,10 @@ void main() {
       const token = 'i-am-a-token';
       const username = 'password'; // Don't do this at home
       const password = 'password'; // Don't do this at home
-      final uri = Uri.https(PindoClient.authority, path);
+      final uri = Uri.https(Pindo.authority, path);
       final reqOptions = RequestOptions(
         path: path,
-        baseUrl: PindoClient.authority,
+        baseUrl: Pindo.authority,
       );
       setUp(() {
         when(() => dio.getUri(any())).thenAnswer(
@@ -114,10 +113,10 @@ void main() {
       const token = 'token';
       const username = 'password'; // Don't do this at home
       const password = 'password'; // Don't do this at home
-      final uri = Uri.https(PindoClient.authority, path);
+      final uri = Uri.https(Pindo.authority, path);
       final reqOptions = RequestOptions(
         path: path,
-        baseUrl: PindoClient.authority,
+        baseUrl: Pindo.authority,
       );
       setUp(() {
         when(() => dio.getUri(any())).thenAnswer(
@@ -196,7 +195,7 @@ void main() {
       const email = 'pindo@test.com';
       final reqOptions = RequestOptions(
         path: path,
-        baseUrl: PindoClient.authority,
+        baseUrl: Pindo.authority,
       );
       setUp(() {
         when(() => dio.postUri(any(), data: any(named: 'data'))).thenAnswer(
@@ -214,7 +213,7 @@ void main() {
           password: password,
         );
         verify(
-          () => dio.postUri(Uri.https(PindoClient.authority, path),
+          () => dio.postUri(Uri.https(Pindo.authority, path),
               data: any(named: 'data')),
         ).called(1);
       });
@@ -278,7 +277,7 @@ void main() {
       const path = '/wallets/self';
       final reqOptions = RequestOptions(
         path: path,
-        baseUrl: PindoClient.authority,
+        baseUrl: Pindo.authority,
       );
       const headers = {'Authorization': 'Bearer $token'};
 
@@ -299,7 +298,7 @@ void main() {
         dio.options.headers['Authorization'] = 'Bearer $token';
         verify(
           () => dio.getUri(
-            Uri.https(PindoClient.authority, path),
+            Uri.https(Pindo.authority, path),
           ),
         ).called(1);
       });
@@ -363,7 +362,7 @@ void main() {
       const balance = 0.45;
       final reqOptions = RequestOptions(
         path: path,
-        baseUrl: PindoClient.authority,
+        baseUrl: Pindo.authority,
       );
       final payload = {
         'to': to,
@@ -378,7 +377,7 @@ void main() {
             data: {'remaining_balance': balance},
             requestOptions: RequestOptions(
               path: path,
-              baseUrl: PindoClient.authority,
+              baseUrl: Pindo.authority,
             ),
           ),
         );
@@ -394,7 +393,7 @@ void main() {
         dio.options.headers['Authorization'] = 'Bearer $token';
         verify(
           () => dio.postUri(
-            Uri.https(PindoClient.authority, path),
+            Uri.https(Pindo.authority, path),
             data: payload,
           ),
         ).called(1);
@@ -471,7 +470,7 @@ void main() {
       const retriesCount = 7;
       final reqOptions = RequestOptions(
         path: path,
-        baseUrl: PindoClient.authority,
+        baseUrl: Pindo.authority,
       );
       final payload = {
         'name': name,
@@ -499,7 +498,7 @@ void main() {
         dio.options.headers['Authorization'] = 'Bearer $token';
         verify(
           () => dio.putUri(
-            Uri.https(PindoClient.authority, path),
+            Uri.https(Pindo.authority, path),
             data: payload,
           ),
         ).called(1);
@@ -586,7 +585,7 @@ void main() {
     const email = 'pindo@test.com';
     final reqOptions = RequestOptions(
       path: path,
-      baseUrl: PindoClient.authority,
+      baseUrl: Pindo.authority,
     );
     setUp(() {
       when(() => dio.postUri(any(), data: any(named: 'data'))).thenAnswer(
@@ -600,7 +599,7 @@ void main() {
     test('calls dio.postUri', () async {
       await subject.forgotPassword(email: email);
       verify(
-        () => dio.postUri(Uri.https(PindoClient.authority, path),
+        () => dio.postUri(Uri.https(Pindo.authority, path),
             data: any(named: 'data')),
       ).called(1);
     });

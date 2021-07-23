@@ -1,4 +1,4 @@
-import 'package:pindo_client/src/pindo_errors.dart';
+import 'package:pindo/src/errors.dart';
 import 'package:test/test.dart';
 
 void main() {

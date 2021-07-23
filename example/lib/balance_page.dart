@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pindo_client/pindo_client.dart';
+import 'package:pindo/pindo.dart';
 
 class BalancePage extends StatefulWidget {
   const BalancePage({Key? key}) : super(key: key);
@@ -10,7 +10,7 @@ class BalancePage extends StatefulWidget {
 
 class _BalancePageState extends State<BalancePage> {
   late TextEditingController _controller;
-  final _pindo = PindoClient();
+  final _pindo = Pindo();
   @override
   void initState() {
     _controller = TextEditingController();

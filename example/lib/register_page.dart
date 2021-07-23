@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pindo_client/pindo_client.dart';
+import 'package:pindo/pindo.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -14,7 +14,7 @@ class _RegisterPageState extends State<RegisterPage> {
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
   bool _isPasswordVisible = false;
-  final _pindo = PindoClient();
+  final _pindo = Pindo();
 
   @override
   void initState() {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pindo_client/pindo_client.dart';
+import 'package:pindo/pindo.dart';
 
 class SMSPage extends StatefulWidget {
   const SMSPage({Key? key}) : super(key: key);
@@ -14,7 +14,7 @@ class _SMSPageState extends State<SMSPage> {
   late TextEditingController _token;
   late TextEditingController _text;
 
-  final _pindo = PindoClient();
+  final _pindo = Pindo();
   final _formKey = GlobalKey<FormState>();
 
   @override

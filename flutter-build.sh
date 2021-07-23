@@ -1,8 +1,9 @@
 #!/bin/bash
+## A Script to download and run flutter in Netlify.
+## Not related to the package; just used for deploying the example on Netlify.
 cd "example"
 FLUTTER_BRANCH=`grep channel: .metadata | sed 's/  channel: //g'`
 
-# Get flutter
 git clone https://github.com/flutter/flutter.git
 FLUTTER=flutter/bin/flutter
 

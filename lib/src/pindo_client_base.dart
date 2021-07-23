@@ -84,7 +84,7 @@ class PindoClient {
     throw PindoUnexpectedResponseError(expected: 'token', received: data);
   }
 
-  /// Create a new Pindo account
+  /// Creates a new Pindo account
   /// Returns the url to the user's profile
   Future<void> register({
     required String username,
@@ -115,7 +115,7 @@ class PindoClient {
     }
   }
 
-  /// Check your balance
+  /// Checks the user's balance
   Future<double> balance({required String token}) async {
     final uri = Uri.https(authority, '/wallets/self');
     _dio.options.headers = {'Authorization': 'Bearer $token'};
@@ -145,7 +145,7 @@ class PindoClient {
     throw PindoUnexpectedResponseError(expected: 'amount', received: data);
   }
 
-  /// Send an SMS to a single user
+  /// Sends an SMS to a single user
   /// retutns the remaining balance after the sms is sent
   Future<double> sendSMS({
     required String token,
@@ -184,8 +184,8 @@ class PindoClient {
     );
   }
 
-  /// Setup an organization.
-  /// Returns the url to the organization
+  /// Update organization settings.
+  /// Returns the organization's new url
   Future<String> organization({
     required String token,
     required String name,
@@ -223,6 +223,28 @@ class PindoClient {
       return data['self_url'];
     }
     throw PindoUnexpectedResponseError(expected: 'self_url', received: data);
+  }
+
+  /// Sends the user an email to reset their password.
+  Future<void> forgotPassword({required String email}) async {
+    final uri = Uri.https(authority, '/users/forgot');
+    final payload = {'email': email};
+    late Response<Map<String, dynamic>> res;
+
+    try {
+      res = await _dio.postUri(uri, data: payload);
+    } on DioError catch (e, s) {
+      throw PindoError(
+        message: (e.response?.data as Map)['message'],
+        statusCode: (e.response?.data as Map)['status'] ?? res.statusCode,
+        type: e.type.valueToString,
+        stackTrace: s,
+      );
+    } on TypeError {
+      throw PindoCastingError();
+    } on Exception {
+      rethrow;
+    }
   }
 }
 

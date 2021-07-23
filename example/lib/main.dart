@@ -1,4 +1,5 @@
 import 'package:example/balance_page.dart';
+import 'package:example/forgot_password.dart';
 import 'package:example/register_page.dart';
 import 'package:example/sms_page.dart';
 import 'package:example/token_page.dart';
@@ -64,6 +65,13 @@ class AppView extends StatelessWidget {
               onPressed: () => Navigator.of(context)
                   .push(MaterialPageRoute(builder: (_) => const SMSPage())),
               child: const Text('SMS'),
+            ),
+            const SizedBox(height: 20),
+            TextButton(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const ForgotPasswordPage()),
+              ),
+              child: const Text('Forgot Password'),
             ),
           ],
         ),

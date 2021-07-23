@@ -580,6 +580,71 @@ void main() {
     });
   });
 
+// PindoClient -> forgotPassword
+  group('forgotPassword', () {
+    const path = '/users/forgot';
+    const email = 'pindo@test.com';
+    final reqOptions = RequestOptions(
+      path: path,
+      baseUrl: PindoClient.authority,
+    );
+    setUp(() {
+      when(() => dio.postUri(any(), data: any(named: 'data'))).thenAnswer(
+        (_) async => Response<Map<String, dynamic>>(
+          data: {'message': 'A recovery link has been sent via email'},
+          statusCode: 200,
+          requestOptions: reqOptions,
+        ),
+      );
+    });
+    test('calls dio.postUri', () async {
+      await subject.forgotPassword(email: email);
+      verify(
+        () => dio.postUri(Uri.https(PindoClient.authority, path),
+            data: any(named: 'data')),
+      ).called(1);
+    });
+
+    test('throws a PindoError when a DioError is thrown by dio', () {
+      when(() => dio.postUri(any(), data: any(named: 'data'))).thenThrow(
+        DioError(
+            response: Response(
+              statusCode: 404,
+              requestOptions: reqOptions,
+              data: {'message': 'not found', 'status': 404},
+            ),
+            requestOptions: reqOptions),
+      );
+      expect(
+        () => subject.forgotPassword(email: email),
+        throwsA(isA<PindoError>()),
+      );
+    });
+
+    test('throws PindoCastingError when the response is not a Map', () {
+      when(() => dio.postUri(any(), data: any(named: 'data'))).thenAnswer(
+        (_) async => Response(
+          data: [],
+          statusCode: 200,
+          requestOptions: reqOptions,
+        ),
+      );
+      expect(
+        () => subject.forgotPassword(email: email),
+        throwsA(isA<PindoCastingError>()),
+      );
+    });
+
+    test('rethrows an Exception when it\'s none of the above', () {
+      when(() => dio.postUri(any(), data: any(named: 'data')))
+          .thenThrow(Exception());
+      expect(
+        () => subject.forgotPassword(email: email),
+        throwsA(isA<Exception>()),
+      );
+    });
+  });
+
   group('DioErrorTypeExtension', () {
     const value = DioErrorType.response;
 
